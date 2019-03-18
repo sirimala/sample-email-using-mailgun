@@ -1,0 +1,46 @@
+import requests
+from env import api_key, domain, from_mail
+import csv
+
+def send_simple_message(to_mail, subject="", body="", from_mail=from_mail):
+    return requests.post(
+        "https://api.mailgun.net/v3/%s/messages"%domain,
+        auth=("api", api_key),
+        data={"from": "MSIT LMS <%s>"%from_mail,
+              "to": [to_mail],
+              "subject": subject,
+              "text": body})
+
+def user_data(file_name="cgpa.csv"):
+	data = [{
+			"email": "ss@fju.us",
+			"rollnumber": "1584",
+			"name": "sreenath sirimala",
+			"cgpa": 9.0
+		}]
+	try:
+		data = csv.DictReader(open(file_name))
+	except Exception as e:
+		print(e)
+	return data
+
+def main(file_name):
+	data = user_data(file_name)
+	subject = "CGPA"
+	body = """
+	Hi {},
+
+		Your ({}) overall CGPA so far is {}.
+	"""
+	for user in data:
+		print("sending email to {} with rollnumber {}. {} cgpa is {}".format(
+			user['email'], user['rollnumber'], user['name'], user['cgpa']
+		))
+		body = body.format(user['name'], user['rollnumber'], user['cgpa'])
+		print(body)
+		response = send_simple_message(user['email'], subject, body)
+		print(response)
+
+if __name__ == '__main__':
+	file_name = "cgpa.csv"
+	main(file_name)
