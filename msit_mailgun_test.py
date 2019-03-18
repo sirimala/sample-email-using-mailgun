@@ -12,16 +12,19 @@ def send_simple_message(to_mail, subject="", body="", from_mail=from_mail):
               "text": body})
 
 def user_data(file_name="cgpa.csv"):
-	data = [{
-			"email": "ss@fju.us",
-			"rollnumber": "1584",
-			"name": "sreenath sirimala",
-			"cgpa": 9.0
-		}]
+	# Example data object
+	# data = [{
+	# 		"email": "ss@fju.us",
+	# 		"rollnumber": "1584",
+	# 		"name": "sreenath sirimala",
+	# 		"cgpa": 9.0
+	# 	}]
+	data = []
 	try:
 		data = csv.DictReader(open(file_name))
 	except Exception as e:
 		print(e)
+		data = []
 	return data
 
 def main(file_name):
@@ -33,14 +36,16 @@ def main(file_name):
 		Your ({}) overall CGPA so far is {}.
 	"""
 	for user in data:
-		print("sending email to {} with rollnumber {}. {} cgpa is {}".format(
-			user['email'], user['rollnumber'], user['name'], user['cgpa']
-		))
-		body = body.format(user['name'], user['rollnumber'], user['cgpa'])
-		print(body)
-		response = send_simple_message(user['email'], subject, body)
-		print(response)
+		try:
+			print("sending email to {} with rollnumber {}. {} cgpa is {}".format(
+				user['email'], user['rollnumber'], user['name'], user['cgpa']
+			))
+			body = body.format(user['name'], user['rollnumber'], user['cgpa'])
+			response = send_simple_message(user['email'], subject, body)
+			print(response)
+		except Exception as e:
+			raise e
 
 if __name__ == '__main__':
-	file_name = "cgpa.csv"
+	file_name = "CGPA.csv"
 	main(file_name)
