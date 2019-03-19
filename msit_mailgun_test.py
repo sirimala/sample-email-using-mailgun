@@ -40,12 +40,12 @@ def main(file_name):
 			print("sending email to {} with rollnumber {}. {} cgpa is {}".format(
 				user['email'], user['rollnumber'], user['name'], user['cgpa']
 			))
-			body = body.format(user['name'], user['rollnumber'], user['cgpa'])
-			response = send_simple_message(user['email'], subject, body)
+			body1 = body.format(user['name'], user['rollnumber'], user['cgpa'])
+			response = send_simple_message(user['email'], subject, body1)
 			print(response)
 		except Exception as e:
 			raise e
 
 if __name__ == '__main__':
-	file_name = "CGPA.csv"
+	file_name = "CGPA1.csv"
 	main(file_name)
